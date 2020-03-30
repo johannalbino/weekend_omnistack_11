@@ -8,16 +8,26 @@ import api from '../../services/api';
 
 export default function Logon(){
 
-    const [id, setId] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const history = useHistory();
 
     async function handleLogin(e){
         e.preventDefault();
 
         try{
-            const response = await api.post('session', {id});
-            localStorage.setItem('ongId', id);
-            localStorage.setItem('ongName', response.data.name);
+            const response = await api.post('session/', {
+                username: username,
+                password: password
+            });
+            localStorage.setItem('token', response.data['token']);
+
+            const responseProfile = await api.get('ong/my_profile/', {
+                headers: {
+                    Authorization: `token ${response.data['token']}`,
+                }
+            });
+            localStorage.setItem('ongName', responseProfile.data[0]['username']);
 
             history.push('/profile');
         } catch (err) {
@@ -34,9 +44,14 @@ export default function Logon(){
                 <form onSubmit={handleLogin}>
                     <h1>Faça seu logon</h1>
                     <input 
-                        placeholder="Sua ID"
-                        value={id}
-                        onChange={e => setId(e.target.value)} />
+                        placeholder="Seu usuário"
+                        value={username}
+                        onChange={e => setUsername(e.target.value)} />
+                    <input
+                        placeholder="Sua senha"
+                        value={password}
+                        type="password"
+                        onChange={e => setPassword(e.target.value)} />
                     <button className="button" type="submit">Entrar</button>
 
                     <Link className="back-link" to="/register">

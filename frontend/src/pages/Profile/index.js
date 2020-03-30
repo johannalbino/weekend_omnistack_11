@@ -10,28 +10,28 @@ export default function Profile(){
     const [incidents, setIncidents] = useState([]);
     const history = useHistory();
 
+    const tokenOng = localStorage.getItem('token');
     const ongName = localStorage.getItem('ongName');
-    const ongId = localStorage.getItem('ongId');
 
     useEffect(() => {
-        api.get('profile', {
+        api.get('profile/', {
             headers: {
-                Authorization: ongId,
+                Authorization: `token ${tokenOng}`,
             }
         }).then(response => {
             setIncidents(response.data);
         })
-    }, [ongId]);
+    }, [tokenOng]);
 
     function handleDeleteIncident(id) {
         try{
             api.delete(`incidents/${id}`, {
                 headers: {
-                    Authorization: ongId
+                    Authorization: `token ${tokenOng}`
                 }
             });
 
-            setIncidents(incidents.filter(incident => incident.id != id));
+            setIncidents(incidents.filter(incident => incident.id_incidents != id));
         } catch (err){
             alert('Erro ao deletar caso, tente novamente.')
         }
@@ -58,17 +58,17 @@ export default function Profile(){
             <ul>
                 {
                     incidents.map(incident => (
-                        <li key={incident.id}>
+                        <li key={incident.id_incidents}>
                             <strong>CASO:</strong>
-                            <p>{incident.title}</p>
+                            <p>{incident.title_incident}</p>
 
                             <strong>DESCRIÇÃO:</strong>
-                            <p>{incident.description}</p>
+                            <p>{incident.description_incident}</p>
 
                             <strong>VALOR</strong>
-                            <p>{Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(incident.value)}</p>
+                            <p>{Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(incident.value_incident)}</p>
 
-                            <button type="button" onClick={() => handleDeleteIncident(incident.id)}>
+                            <button type="button" onClick={() => handleDeleteIncident(incident.id_incidents)}>
                                 <FiTrash2 size={20} color="#a8a8b3" />
                             </button>
                         </li>

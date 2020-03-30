@@ -7,11 +7,12 @@ import api from '../../services/api';
 
 export default function Register(){
 
-    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [whatsapp, setWhatsapp] = useState('');
+    const [phone_number, setPhoneNumber] = useState('');
     const [city, setCity] = useState('');
     const [uf, setUf] = useState('');
+    const [password, setPassword] = useState('');
 
     const history = useHistory();
 
@@ -20,16 +21,17 @@ export default function Register(){
         e.preventDefault();
 
         const data ={
-            name,
+            username,
             email,
-            whatsapp,
+            phone_number,
             city,
             uf,
+            password,
         };
 
         try {
-            const response = await api.post('ongs', data);
-            alert(`Seu ID de acesso: ${response.data.id}`);
+            const response = await api.post('ong/', data);
+            alert(`ONG criada com sucesso.`);
             history.push('/');
         } catch (err) {
             alert('Erro ao tentar cadastrar.')
@@ -53,16 +55,21 @@ export default function Register(){
                 <form onSubmit={handleRegister}>
                     <input 
                         placeholder="Nome da ONG" 
-                        value={name} 
-                        onChange={e => setName(e.target.value)} />
+                        value={username} 
+                        onChange={e => setUsername(e.target.value)} />
+                    <input
+                        placeholder="Sua senha"
+                        value={password}
+                        type="password"
+                        onChange={e => setPassword(e.target.value)} />
                     <input type="email" 
                         placeholder="E-mail"
                         value={email}
                         onChange={e => setEmail(e.target.value)} />
                     <input 
                         placeholder="WhastApp"
-                        value={whatsapp} 
-                        onChange={e => setWhatsapp(e.target.value)}/>
+                        value={phone_number} 
+                        onChange={e => setPhoneNumber(e.target.value)}/>
                     <div className="input-group">
                         <input 
                             placeholder="Cidade" 

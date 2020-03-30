@@ -32,9 +32,9 @@ export default function Incidents() {
         const response = await api.get('incidents', {
             params: { page }
         });
-        
-        setIncidents([...incidents, ...response.data]);
-        setTotal(response.headers['x-total-count']);
+        console.log(response.data)
+        setIncidents([...incidents, ...response.data['results']]);
+        setTotal(response.data['count']);
         setLoading(false);
         setPage(page + 1);
     }
@@ -57,7 +57,7 @@ export default function Incidents() {
 
             <FlatList
                 data={incidents}
-                keyExtractor={incident => String(incident.id)}
+                keyExtractor={incident => String(incident.id_incidents)}
                 style={styles.incidentList}
                 showsVerticalScrollIndicator={false}
                 onEndReached={loadIncidents}
@@ -65,12 +65,12 @@ export default function Incidents() {
                 renderItem={({ item: incident }) => (
                     <View style={styles.incident}>
                         <Text style={styles.incidentProperty}>ONG:</Text>
-                        <Text style={styles.incidentValue}>{incident.name}</Text>
+                        <Text style={styles.incidentValue}>{incident.ong_id.username}</Text>
                         <Text style={styles.incidentProperty}>CASO:</Text>
-                        <Text style={styles.incidentValue}> {incident.title} </Text>
+                        <Text style={styles.incidentValue}> {incident.title_incident} </Text>
                         <Text style={styles.incidentProperty}>VALOR:</Text>
                         <Text style={styles.incidentValue}> 
-                            {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(incident.value)} 
+                            {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(incident.value_incident)} 
                         </Text>
 
                         <TouchableOpacity style={styles.detailsButton} onPress={() => {navigateToDetail(incident)} }>
